@@ -526,6 +526,126 @@ function stock() {
     });
   };
 
+  this.reqgisterUser = function (
+    reqIdPersonne,
+    reqMDP,
+    req,
+    res
+  ) {
+   
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `user`(`idPersonneUser`, `motDePasse`, `ajoutDate`) values (?,?,?)",
+        [
+            reqIdPersonne,
+            reqMDP,
+            dateHeureActuelle()
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.reqgisterVente = function (
+    reqIdClient,
+    reqIdProduit,
+    requantite,
+    reqPrixTotal,
+    reqIdUSer,
+    reqTaxe,
+    req,
+    res
+  ) {
+   
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `vente`(`idClient`, `idProduit`, `quantite`, `PrixTotal`, `idUser`, `taxe`, `dateVente`) values (?,?,?,?,?,?,?)",
+        [
+            reqIdClient,
+            reqIdProduit,
+            requantite,
+            reqPrixTotal,
+            reqIdUSer,
+            reqTaxe,
+            dateHeureActuelle()
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+
+
 
   function dateHeureActuelle(){
     const start = Date.now();
