@@ -354,6 +354,8 @@ function stock() {
       );
     });
   };
+
+  /////////////////////////////////////Categorie/////////////////////////////:
   this.reqgisterCategorie = function (
     reqnom,
     reqtype,
@@ -409,6 +411,142 @@ function stock() {
       );
     });
   };
+
+  this.selectCategories = function (req, res) {
+    
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "select * from Categorie",
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 1,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.updateCategorie = function (
+    reqnom,
+    reqtype,
+    reqIdCategorie,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `categorie` SET `nom`=?,`type`=?, `dateAjout`=?   WHERE idCategorie=?",
+        [
+            reqnom,
+            reqtype,
+          dateHeureActuelle(),
+          reqIdCategorie,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+  this.deleteCategorie = function (reqIdCategorie, req, res) {
+    connection.acquire(function (err, con) {
+      con.query(
+        "DELETE FROM `Categorie` WHERE idCategorie=?",
+        reqIdCategorie,
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            res.send({
+              status: 200,
+              message: result,
+            });
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  //////////////////////////////////////////////////client///////////////////////:
   this.reqgisterClient = function (
     reqIdPersonne,
     reqsociete,
@@ -467,6 +605,7 @@ function stock() {
     });
   };
 
+  /////////////////////////////////////////////////produit///////////////////////////////////
   this.reqgisterProduit = function (
     reqIdCategorie,
     reqPrix,
@@ -525,6 +664,7 @@ function stock() {
       );
     });
   };
+  //////////////////////////////////////////////////user/////////////////////////////////////////////////:
 
   this.reqgisterUser = function (
     reqIdPersonne,
@@ -580,6 +720,7 @@ function stock() {
       );
     });
   };
+  ///////////////////////////////////////////////////////////vente/////////////////////////////////////////////////////
 
   this.reqgisterVente = function (
     reqIdClient,
@@ -643,7 +784,7 @@ function stock() {
       );
     });
   };
-
+////////////////////////////////////////////////:Date//////////////heure.......////////////////////////////:::
 
 
 
@@ -653,6 +794,8 @@ function stock() {
     //const formatted = date.toLocaleDateString("fr-FR")
     return date;
   }
+////////////////////////////////////////////
+/////////////////fin fonction........................./////////////////////////////////////
 }
 
 
