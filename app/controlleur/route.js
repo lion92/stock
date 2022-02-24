@@ -43,6 +43,19 @@ module.exports = {
     });
 
     /////////////////////////////////Categorie//////////////////////////
+    app.post("/ajoutCategorie", function (req, res) {
+      todo.reqgisterCategorie(
+        req.body.nom,
+        req.body.type,
+        req.body.datetime,
+        req,
+        res
+      );
+    });
+
+    app.get("/selectCategorie/:email", function (req, res) {
+      todo.selectCategorie(req.params.email, req, res);
+    });
 
     app.get("/selectCategories", function (req, res) {
       todo.selectCategories(req, res);
@@ -62,6 +75,21 @@ module.exports = {
       todo.deleteCategorie(req.params.idCategorie, req, res);
     });
     ////////////////////////////////////////////////Produit///////////////////////////////////////////
+    app.post("/ajoutProduit", function (req, res) {
+      todo.reqgisterProduit(
+        req.body.idCategorie,
+        req.body.prix,
+        req.body.stock,
+        req.body.nom,
+        req.body.datetime,
+        req,
+        res
+      );
+    });
+    app.get("/selectProduit/:email", function (req, res) {
+      todo.selectProduit(req.params.email, req, res);
+    });
+
     app.get("/selectProduits", function (req, res) {
       todo.selectProduits(req, res);
     });
@@ -82,18 +110,77 @@ module.exports = {
       todo.deleteProduit(req.params.idProduit, req, res);
     });
 
-    /////////////////////////////////////////////////User/////////////////////////////////////////////:
+    /////////////////////////////////////////////////User/////////////////////////////////////////////
+    app.post("/ajoutUser", function (req, res) {
+        todo.reqgisterUser(
+            req.body.mdp,
+            req.body.idPersonne,req.body.datetime
+           ,
+          req,
+          res
+        );
+      });
+
+      app.get("/selectUser/:email", function (req, res) {
+        todo.selectUser(req.params.email, req, res);
+      });
+
     app.get("/selectUsers", function (req, res) {
       todo.selectUsers(req, res);
     });
 
     app.put("/updateUser", function (req, res) {
-      todo.updateUser(req.body.nom, req.body.type, req.body.idUser, req, res);
+      todo.updateUser(
+        req.body.mdp,
+        req.body.idPersonne,
+        req.body.idUser,
+        req,
+        res
+      );
     });
 
     app.delete("/deleteUser/:idUser", function (req, res) {
       todo.deleteUser(req.params.idUser, req, res);
     });
+    /////////////////////////////////////////////////////vente////////////////////////////////////////////
+
+    app.post("/ajoutVente", function (req, res) {
+      todo.reqgisterVente(
+        req.body.idClient,
+        req.body.idProduit,
+        req.body.quantite,
+        req.body.prixTotal,
+        req.body.idUser,
+        req.body.taxe,
+        req,
+        res
+      );
+    });
+    app.get("/selectVente/:email", function (req, res) {
+      todo.selectVente(req.params.email, req, res);
+    });
+    app.get("/selectVentes", function (req, res) {
+      todo.selectVentes(req, res);
+    });
+
+    app.put("/updateVente", function (req, res) {
+      todo.updateVente(
+        req.body.idClient,
+        req.body.idProduit,
+        req.body.quantite,
+        req.body.prixTotal,
+        req.body.idUser,
+        req.body.taxe,
+        req.body.idVente,
+        req,
+        res
+      );
+    });
+
+    app.delete("/deleteVente/:idVente", function (req, res) {
+      todo.deleteVente(req.params.idVente, req, res);
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     app.post("/login", function (req, res) {
       todo.reqlogin(
