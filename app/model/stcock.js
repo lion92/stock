@@ -1195,6 +1195,149 @@ function stock() {
       );
     });
   };
+
+  this.selectVentes = function (req, res) {
+    let hashpass = "";
+    let bon = "";
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "select * from Vente",
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 1,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.updateVente = function (
+    reqIdClient,
+    reqIdProduit,
+    requantite,
+    reqPrixTotal,
+    reqIdUSer,
+    reqTaxe,
+    reqIdVente,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `vente` SET `idClient`=?,`idProduit`=?,`quantite`=?,`PrixTotal`=?,`idUser`=?,`taxe`=?,`dateVente`=?  WHERE idVente=?",
+        [
+            reqIdClient,
+            reqIdProduit,
+            requantite,
+            reqPrixTotal,
+            reqIdUSer,
+            reqTaxe,
+          dateHeureActuelle(),
+          reqIdVente,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+  this.deleteVente = function (reqIdVente, req, res) {
+    connection.acquire(function (err, con) {
+      con.query(
+        "DELETE FROM `Vente` WHERE idVente=?",
+        reqIdVente,
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+          );
+
+          if (err) {
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            res.send({
+              status: 200,
+              message: result,
+            });
+            con.release();
+          }
+        }
+      );
+    });
+  };
 ////////////////////////////////////////////////:Date//////////////heure.......////////////////////////////:::
 
 
