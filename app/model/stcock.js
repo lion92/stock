@@ -605,6 +605,142 @@ function stock() {
     });
   };
 
+  this.selectClients = function (req, res) {
+    let hashpass = "";
+    let bon = "";
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "select * from Client",
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 1,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.updateClient = function (
+    reqIdPersonne,
+    reqsociete,
+    reqposte,
+    reqIdClient,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `client` SET `idPersonneClient`=?,`societe`=?,`poste`=?,`dateAjout`=?   WHERE idClient=?",
+        [
+            reqIdPersonne,
+            reqsociete,
+            reqposte,
+          dateHeureActuelle(),
+          reqIdClient,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+  this.deleteClient = function (reqIdClient, req, res) {
+    connection.acquire(function (err, con) {
+      con.query(
+        "DELETE FROM `Client` WHERE idClient=?",
+        reqIdClient,
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            res.send({
+              status: 200,
+              message: result,
+            });
+            con.release();
+          }
+        }
+      );
+    });
+  };
   /////////////////////////////////////////////////produit///////////////////////////////////
   this.reqgisterProduit = function (
     reqIdCategorie,
