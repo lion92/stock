@@ -147,7 +147,7 @@ function stock() {
       // Store hash in your password DB.
 
       con.query(
-        "insert into personne (nom, prenom, age, ville, numeroTelephone, adresse, codePostale, email) values (?,?,?,?,?,?,?,?)",
+        "insert into personne (nom, prenom, age, ville, numeroTelephone, adresse, codePostale, email,ajoutDate) values (?,?,?,?,?,?,?,?,?)",
         [
           reqnom,
           reqprenom,
@@ -157,6 +157,7 @@ function stock() {
           reqAdresse,
           reqCodePostale,
           reqEmail,
+          dateHeureActuelle()
         ],
         function (err, result) {
           res.header("Access-Control-Allow-Origin", "*");
@@ -276,7 +277,7 @@ function stock() {
       // Store hash in your password DB.
 
       con.query(
-        "UPDATE `personne` SET `nom`=?,`prenom`=?,`age`=?,`ville`=?,`numeroTelephone`=?,`adresse`=?,`codePostale`=?,`email`=? WHERE idPersonne=?",
+        "UPDATE `personne` SET `nom`=?,`prenom`=?,`age`=?,`ville`=?,`numeroTelephone`=?,`adresse`=?,`codePostale`=?,`email`=?,`ajoutDate`=?   WHERE idPersonne=?",
         [
           reqnom,
           reqprenom,
@@ -286,6 +287,7 @@ function stock() {
           reqAdresse,
           reqCodePostale,
           reqEmail,
+          dateHeureActuelle(),
           reqIdPersonne,
         ],
         function (err, result) {
@@ -373,7 +375,64 @@ function stock() {
         [
           reqnom,
           reqtype,
-		  dateAjout
+		  dateHeureActuelle()
+          
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+  this.reqgisterClient = function (
+    reqIdPersonne,
+    reqsociete,
+    reqposte,
+    req,
+    res
+  ) {
+   
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `client`(`idPersonneClient`, `societe`, `poste`, `dateAjout`)  values (?,?,?,?)",
+        [
+            reqIdPersonne,
+            reqsociete,
+            reqposte,
+            dateHeureActuelle()
           
         ],
         function (err, result) {
@@ -408,6 +467,73 @@ function stock() {
     });
   };
 
+  this.reqgisterProduit = function (
+    reqIdCategorie,
+    reqPrix,
+    reqstock,
+    reqNom,
+    req,
+    res
+  ) {
+   
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `produit`(`idCategorie`, `Prix`, `stock`, `nom`, `dateProduit`) values (?,?,?,?,?)",
+        [
+            reqIdCategorie,
+            reqPrix,
+            reqstock,
+            reqNom,
+            dateHeureActuelle()
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+
+  function dateHeureActuelle(){
+    const start = Date.now();
+    const date = new Date(start);
+    //const formatted = date.toLocaleDateString("fr-FR")
+    return date;
+  }
 }
+
 
 module.exports = new stock();

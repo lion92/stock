@@ -47,7 +47,7 @@ module.exports = {
       todo.reqgisterCategorie(
         req.body.nom,
         req.body.type,
-        req.body.datetime,
+        
         req,
         res
       );
@@ -81,7 +81,7 @@ module.exports = {
         req.body.prix,
         req.body.stock,
         req.body.nom,
-        req.body.datetime,
+        
         req,
         res
       );
@@ -114,8 +114,8 @@ module.exports = {
     app.post("/ajoutUser", function (req, res) {
         todo.reqgisterUser(
             req.body.mdp,
-            req.body.idPersonne,req.body.datetime
-           ,
+            req.body.idPersonne,
+           
           req,
           res
         );
@@ -180,8 +180,39 @@ module.exports = {
     app.delete("/deleteVente/:idVente", function (req, res) {
       todo.deleteVente(req.params.idVente, req, res);
     });
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////client//////////////////////////////////////////////////
+    app.post("/ajoutClient", function (req, res) {
+        todo.reqgisterClient(
+            req.body.idPersonne,
+            req.body.societe,req.body.poste
+           ,
+          req,
+          res
+        );
+      });
 
+      app.get("/selectClient/:email", function (req, res) {
+        todo.selectClient(req.params.email, req, res);
+      });
+
+    app.get("/selectClients", function (req, res) {
+      todo.selectClients(req, res);
+    });
+
+    app.put("/updateClient", function (req, res) {
+      todo.updateClient(
+        req.body.mdp,
+        req.body.idPersonne,
+        req.body.idClient,
+        req,
+        res
+      );
+    });
+
+    app.delete("/deleteClient/:idClient", function (req, res) {
+      todo.deleteClient(req.params.idClient, req, res);
+    });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
     app.post("/login", function (req, res) {
       todo.reqlogin(
         req.body.email,
