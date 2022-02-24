@@ -800,6 +800,146 @@ function stock() {
       );
     });
   };
+
+  this.selectProduits = function (req, res) {
+    let hashpass = "";
+    let bon = "";
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "select * from Produit",
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Produit-key, x-Produit-token, x-Produit-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 1,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.updateProduit = function (
+    reqIdCategorie,
+    reqPrix,
+    reqstock,
+    reqNom,
+    reqIdProduit,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `produit` SET `idCategorie`=?,`Prix`=?,`stock`=?,`nom`=?,`dateProduit`=?  WHERE idProduit=?",
+        [
+            reqIdCategorie,
+            reqPrix,
+            reqstock,
+            reqNom,
+          dateHeureActuelle(),
+          reqIdProduit,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Produit-key, x-Produit-token, x-Produit-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.deleteProduit = function (reqIdProduit, req, res) {
+    connection.acquire(function (err, con) {
+      con.query(
+        "DELETE FROM `Produit` WHERE idProduit=?",
+        reqIdProduit,
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Produit-key, x-Produit-token, x-Produit-secret, Authorization"
+          );
+
+          if (err) {
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            res.send({
+              status: 200,
+              message: result,
+            });
+            con.release();
+          }
+        }
+      );
+    });
+  };
   //////////////////////////////////////////////////user/////////////////////////////////////////////////:
 
   this.reqgisterUser = function (
