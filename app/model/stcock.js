@@ -244,7 +244,7 @@ function stock() {
             //console.log("IIIIIIIIIIIIIIIIIIIIIII");
             res.send({
               status: 200,
-              message: result,
+              message: result
             });
             //console.log("Post successful");
             con.release();
@@ -267,7 +267,7 @@ function stock() {
             // Store hash in your password DB.
 
             con.query(
-                "select * from personne where idPersonne=?",idPersonne,
+                "select * from personne where idPersonne=?",IdPersonne,
                 function (err, result) {
                     res.header("Access-Control-Allow-Origin", "*");
                     res.header(
@@ -358,7 +358,7 @@ function stock() {
             //console.log("IIIIIIIIIIIIIIIIIIIIIII");
             res.send({
               status: 200,
-              message: result,
+              message: result
             });
             //console.log("Post successful");
             con.release();

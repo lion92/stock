@@ -25,7 +25,7 @@ module.exports = {
     });
 
     app.get("/selectPersonneParid/:id", function (req, res) {
-      todo.selectPersonnes(req.params.id,req, res);
+      todo.selectPersonneParId(req.params.id,req, res);
     });
 
     app.put("/updatePersonne", function (req, res) {
