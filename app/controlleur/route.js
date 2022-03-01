@@ -23,6 +23,11 @@ module.exports = {
     app.get("/selectPersonnes", function (req, res) {
       todo.selectPersonnes(req, res);
     });
+
+    app.get("/selectPersonneParid/:id", function (req, res) {
+      todo.selectPersonnes(req.params.id,req, res);
+    });
+
     app.put("/updatePersonne", function (req, res) {
       todo.updatePersonne(
         req.body.nom,
@@ -92,6 +97,9 @@ module.exports = {
 
     app.get("/selectProduits", function (req, res) {
       todo.selectProduits(req, res);
+    });
+    app.get("/selectProduitParId/:idProduit", function (req, res) {
+      todo.selectProduitParId(req.params.idProduit,req, res);
     });
 
     app.put("/updateProduit", function (req, res) {
