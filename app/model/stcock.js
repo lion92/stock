@@ -367,6 +367,61 @@ function stock() {
       );
     });
   };
+
+    this.updatePersonneImage = function (
+        reqimage,
+        reqIdPersonne,
+        req,
+        res
+    ) {
+        console.log(reqIdPersonne);
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "UPDATE `personne` SET `image`=?  WHERE idPersonne=?",
+                [
+                    reqimage,
+                    reqIdPersonne,
+                ],
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 500,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+
   this.deletePeronne = function (reqIdPersonne, req, res) {
     connection.acquire(function (err, con) {
       con.query(
@@ -502,6 +557,51 @@ function stock() {
       );
     });
   };
+
+    this.selectCategorieParId = function (idCategorie,req, res) {
+
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from Categorie where idCategorie=?",idCategorie,
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
 
   this.updateCategorie = function (
     reqnom,
@@ -697,11 +797,57 @@ function stock() {
     });
   };
 
+    this.selectClientParId= function (idClient,req, res) {
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from Client where idClient=?",idClient,
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+
   this.updateClient = function (
     reqIdPersonne,
+    reqIdClient,
     reqsociete,
     reqposte,
-    reqIdClient,
     req,
     res
   ) {
@@ -1334,7 +1480,54 @@ function stock() {
     });
   };
 
-  this.updateVente = function (
+    this.selectVenteParId = function (idVente,req, res) {
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from Vente where idvente=?",idVente,
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+
+
+    this.updateVente = function (
     reqIdClient,
     reqIdProduit,
     requantite,
@@ -1397,7 +1590,40 @@ function stock() {
       );
     });
   };
-  this.deleteVente = function (reqIdVente, req, res) {
+
+    this.uploadPicture = function (req, res) {
+        console.log("test");
+        try {
+            if(!req.files) {
+                res.send({
+                    status: false,
+                    message: 'No file uploaded'
+                });
+            } else {
+                //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
+                let avatar = req.files.avatar;
+
+                //Use the mv() method to place the file in upload directory (i.e. "uploads")
+                avatar.mv('./app/upload/' + avatar.name);
+
+                //send response
+                res.send({
+                    status: true,
+                    message: 'File is uploaded',
+                    data: {
+                        name: avatar.name,
+                        mimetype: avatar.mimetype,
+                        size: avatar.size
+                    }
+                });
+            }
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    };
+
+
+    this.deleteVente = function (reqIdVente, req, res) {
     connection.acquire(function (err, con) {
       con.query(
         "DELETE FROM `Vente` WHERE idVente=?",
@@ -1429,7 +1655,12 @@ function stock() {
         }
       );
     });
-  };
+
+
+
+
+
+      };
 ////////////////////////////////////////////////:Date//////////////heure.......////////////////////////////:::
 
 

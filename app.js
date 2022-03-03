@@ -24,7 +24,7 @@ app.use('/img', express.static(__dirname + 'public/img'))
 app.use('/img', express.static(__dirname + 'public/son'))
 app.use(express.static('views'))
 app.set('view engine', 'html');
-
+app.use(express.static('app/upload'))
 app.get('', (req, res) => {
     res.render( "index")
 })

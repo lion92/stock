@@ -1,20 +1,20 @@
 var todo = require("../model/stcock");
-
+let fileupload = require("express-fileupload");
 module.exports = {
   //////////////////////////////Personne//////////////////////////////////////////////////
   configure: function (app) {
     app.post("/registerPersonne", function (req, res) {
       todo.reqgisterPersonne(
-        req.body.nom,
-        req.body.prenom,
-        req.body.age,
-        req.body.ville,
-        req.body.numero,
-        req.body.adresse,
-        req.body.codePostale,
-        req.body.email,
-        req,
-        res
+          req.body.nom,
+          req.body.prenom,
+          req.body.age,
+          req.body.ville,
+          req.body.numero,
+          req.body.adresse,
+          req.body.codePostale,
+          req.body.email,
+          req,
+          res
       );
     });
     app.get("/selectPersonne/:email", function (req, res) {
@@ -25,24 +25,34 @@ module.exports = {
     });
 
     app.get("/selectPersonneParid/:id", function (req, res) {
-      todo.selectPersonneParId(req.params.id,req, res);
+      todo.selectPersonneParId(req.params.id, req, res);
     });
 
     app.put("/updatePersonne", function (req, res) {
       todo.updatePersonne(
-        req.body.nom,
-        req.body.prenom,
-        req.body.age,
-        req.body.ville,
-        req.body.numero,
-        req.body.adresse,
-        req.body.codePostale,
-        req.body.email,
-        req.body.idPersonne,
-        req,
-        res
+          req.body.nom,
+          req.body.prenom,
+          req.body.age,
+          req.body.ville,
+          req.body.numero,
+          req.body.adresse,
+          req.body.codePostale,
+          req.body.email,
+          req.body.idPersonne,
+          req,
+          res
       );
     });
+
+    app.put("/updatePersonneImage", function (req, res) {
+      todo.updatePersonneImage(
+          req.body.image,
+          req.body.idPersonne,
+          req,
+          res
+      );
+    });
+    
     app.delete("/deletePersonne/:idPersonne", function (req, res) {
       todo.deletePeronne(req.params.idPersonne, req, res);
     });
@@ -50,11 +60,11 @@ module.exports = {
     /////////////////////////////////Categorie//////////////////////////
     app.post("/ajoutCategorie", function (req, res) {
       todo.reqgisterCategorie(
-        req.body.nom,
-        req.body.type,
-        
-        req,
-        res
+          req.body.nom,
+          req.body.type,
+
+          req,
+          res
       );
     });
 
@@ -66,13 +76,17 @@ module.exports = {
       todo.selectCategories(req, res);
     });
 
+    app.get("/selectCategorieParId/:id", function (req, res) {
+      todo.selectCategorieParId(req.params.id, req, res);
+    });
+
     app.put("/updateCategorie", function (req, res) {
       todo.updateCetegorie(
-        req.body.nom,
-        req.body.type,
-        req.body.idCategorie,
-        req,
-        res
+          req.body.nom,
+          req.body.type,
+          req.body.idCategorie,
+          req,
+          res
       );
     });
 
@@ -82,13 +96,13 @@ module.exports = {
     ////////////////////////////////////////////////Produit///////////////////////////////////////////
     app.post("/ajoutProduit", function (req, res) {
       todo.reqgisterProduit(
-        req.body.idCategorie,
-        req.body.prix,
-        req.body.stock,
-        req.body.nom,
-        
-        req,
-        res
+          req.body.idCategorie,
+          req.body.prix,
+          req.body.stock,
+          req.body.nom,
+
+          req,
+          res
       );
     });
     app.get("/selectProduit/:email", function (req, res) {
@@ -99,18 +113,18 @@ module.exports = {
       todo.selectProduits(req, res);
     });
     app.get("/selectProduitParId/:idProduit", function (req, res) {
-      todo.selectProduitParId(req.params.idProduit,req, res);
+      todo.selectProduitParId(req.params.idProduit, req, res);
     });
 
     app.put("/updateProduit", function (req, res) {
       todo.updateProduit(
-        req.body.idCategorie,
-        req.body.prix,
-        req.body.stock,
-        req.body.nom,
-        req.body.idProduit,
-        req,
-        res
+          req.body.idCategorie,
+          req.body.prix,
+          req.body.stock,
+          req.body.nom,
+          req.body.idProduit,
+          req,
+          res
       );
     });
 
@@ -120,18 +134,18 @@ module.exports = {
 
     /////////////////////////////////////////////////User/////////////////////////////////////////////
     app.post("/ajoutUser", function (req, res) {
-        todo.reqgisterUser(
-            req.body.mdp,
-            req.body.idPersonne,
-           
+      todo.reqgisterUser(
+          req.body.mdp,
+          req.body.idPersonne,
+
           req,
           res
-        );
-      });
+      );
+    });
 
-      app.get("/selectUser/:email", function (req, res) {
-        todo.selectUser(req.params.email, req, res);
-      });
+    app.get("/selectUser/:email", function (req, res) {
+      todo.selectUser(req.params.email, req, res);
+    });
 
     app.get("/selectUsers", function (req, res) {
       todo.selectUsers(req, res);
@@ -139,11 +153,11 @@ module.exports = {
 
     app.put("/updateUser", function (req, res) {
       todo.updateUser(
-        req.body.mdp,
-        req.body.idPersonne,
-        req.body.idUser,
-        req,
-        res
+          req.body.mdp,
+          req.body.idPersonne,
+          req.body.idUser,
+          req,
+          res
       );
     });
 
@@ -154,14 +168,14 @@ module.exports = {
 
     app.post("/ajoutVente", function (req, res) {
       todo.reqgisterVente(
-        req.body.idClient,
-        req.body.idProduit,
-        req.body.quantite,
-        req.body.prixTotal,
-        req.body.idUser,
-        req.body.taxe,
-        req,
-        res
+          req.body.idClient,
+          req.body.idProduit,
+          req.body.quantite,
+          req.body.PrixTotal,
+          req.body.idUser,
+          req.body.taxe,
+          req,
+          res
       );
     });
     app.get("/selectVente/:email", function (req, res) {
@@ -171,17 +185,22 @@ module.exports = {
       todo.selectVentes(req, res);
     });
 
+
+    app.get("/selectVenteParId/:id", function (req, res) {
+      todo.selectVenteParId(req.params.id, req, res);
+    });
+
     app.put("/updateVente", function (req, res) {
       todo.updateVente(
-        req.body.idClient,
-        req.body.idProduit,
-        req.body.quantite,
-        req.body.prixTotal,
-        req.body.idUser,
-        req.body.taxe,
-        req.body.idVente,
-        req,
-        res
+          req.body.idClient,
+          req.body.idProduit,
+          req.body.quantite,
+          req.body.PrixTotal,
+          req.body.idUser,
+          req.body.taxe,
+          req.body.idvente,
+          req,
+          res
       );
     });
 
@@ -190,30 +209,35 @@ module.exports = {
     });
     //////////////////////////////////////////////////client//////////////////////////////////////////////////
     app.post("/ajoutClient", function (req, res) {
-        todo.reqgisterClient(
-            req.body.idPersonne,
-            req.body.societe,req.body.poste
-           ,
+      todo.reqgisterClient(
+          req.body.idPersonneClient,
+          req.body.societe, req.body.poste
+          ,
           req,
           res
-        );
-      });
+      );
+    });
 
-      app.get("/selectClient/:email", function (req, res) {
-        todo.selectClient(req.params.email, req, res);
-      });
+    app.get("/selectClient/:email", function (req, res) {
+      todo.selectClient(req.params.email, req, res);
+    });
 
     app.get("/selectClients", function (req, res) {
       todo.selectClients(req, res);
     });
 
+    app.get("/selectClientParId/:id", function (req, res) {
+      todo.selectClientParId(req.params.id, req, res);
+    });
+
     app.put("/updateClient", function (req, res) {
       todo.updateClient(
-        req.body.mdp,
-        req.body.idPersonne,
-        req.body.idClient,
-        req,
-        res
+          req.body.idPersonneClient,
+          req.body.idClient,
+          req.body.societe,
+          req.body.poste,
+          req,
+          res
       );
     });
 
@@ -221,14 +245,11 @@ module.exports = {
       todo.deleteClient(req.params.idClient, req, res);
     });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    app.post("/login", function (req, res) {
-      todo.reqlogin(
-        req.body.email,
-        req.body.password,
-        req.body.token,
-        req,
-        res
+    app.post("/AjoutPhoto", fileupload(), function (req, res) {
+      todo.uploadPicture(
+          req,
+          res
       );
-    });
-  },
+    })
+  }
 };
