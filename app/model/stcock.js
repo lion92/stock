@@ -1447,7 +1447,7 @@ function stock() {
       // Store hash in your password DB.
 
       con.query(
-        "select * from Vente",
+        "select * from Vente inner join user on user.idUser=vente.idUser INNER join personne p1 on p1.idPersonne=user.idPersonneUser INNER join client on client.idClient=vente.idClient INNER join produit on produit.idProduit=vente.idProduit INNER join personne p2 on p2.idPersonne=client.idPersonneClient ",
         function (err, result) {
           res.header("Access-Control-Allow-Origin", "*");
           res.header(
