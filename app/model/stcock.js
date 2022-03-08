@@ -31,6 +31,9 @@ function stock() {
   };
 
   this.reqlogin = function (reqemail, reqpassword, reqtoken, req, res) {
+   console.log(reqemail)
+      console.log(reqpassword)
+      console.log(reqtoken)
     let conection2 = false;
     let email = "";
     jwt.verify(
@@ -53,54 +56,50 @@ function stock() {
         //console.log("Connecté à la base de données MySQL!");
 
         con.query(
-          "select password2 from user where email=?",
+          "select motDePasse from user inner join personne on personne.idPersonne=user.idPersonneUser where email=?",
           reqemail,
           function (err, result) {
-            con.release();
-
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header(
-              "Access-Control-Allow-Methods",
-              "GET,HEAD,OPTIONS,POST,PUT"
-            );
-            res.header(
-              "Access-Control-Allow-Headers",
-              "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
-            );
+              con.release();
+              res.header("Access-Control-Allow-Origin", "*");
+              res.header(
+                  "Access-Control-Allow-Methods",
+                  "GET,HEAD,OPTIONS,POST,PUT"
+              );
+              res.header(
+                  "Access-Control-Allow-Headers",
+                  "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+              );
             if (err) {
-              res.send({ status: 1, message: "email" });
+              res.send({ status: 500, message: err });
             } else {
               // res.send({ status: 0, message:  result[0].password2});
               //console.log("Post successful");
               if (!result[0]) {
-                res.send({ status: 1, message: "email invalid" });
+                res.send({ status: 500, message: "email invalid" });
               } else {
                 bcrypt.compare(
                   reqpassword,
-                  result[0].password2,
+                  result[0].motDePasse,
                   function (err, result2) {
                     // result == true
                     if (err) {
                       res.send({
                         status: 500,
                         message:
-                          "Erreur pour comparer les mots de passe " + reqemail,
+                          "Erreur pour comparer les mots de passe " + err,
                       });
-                      con.release();
+                 
                     }
                     if (!result2) {
-                      res.send({
-                        status: 500,
-                        message: "Mot de passe incorrect pour " + reqemail,
-                      });
+                      
                     } else {
                       const jwttoken = jwt.sign(
                         { email: reqemail },
                         "secret_this_should_be_longer",
-                        { expiresIn: "1h" }
+                        { expiresIn: "12h" }
                       );
                       const cookieOption = {
-                        expiresIn: new Date(Date.now() + 24 * 3600),
+                        expiresIn: new Date(Date.now() + 12*24 * 3600),
                         httpOnly: true,
                       };
                       console.log(jwttoken);
@@ -110,12 +109,15 @@ function stock() {
                         message: "Connecte " + reqemail + result2,
                         token: jwttoken,
                       });
+                        
                     }
                   }
                 );
               }
             }
+            
           }
+
         );
       });
     } else {
@@ -207,8 +209,55 @@ function stock() {
       );
     });
   };
+    
 
-  this.selectPersonnes = function (req, res) {
+    this.selectPersonneParEmail = function (email,req, res) {
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from personne where email=?",email,
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+
+    this.selectPersonnes = function (req, res) {
     let hashpass = "";
     let bon = "";
     connection.acquire(function (err, con) {
@@ -1180,62 +1229,117 @@ function stock() {
   };
   //////////////////////////////////////////////////user/////////////////////////////////////////////////:
 
-  this.reqgisterUser = function (
-    reqIdPersonne,
-    reqMDP,
-    req,
-    res
-  ) {
-   
-    connection.acquire(function (err, con) {
-      //console.log(err);
-      //console.log("Connecté à la base de données MySQL!");
+    this.reqgisterUser = function ( reqMDP,
+                                    reqIdPersonne, req, res) {
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+            req.cookies.title = "GeeksforGeeks";
+            //console.log(req.cookies);
 
-      //console.log(req.cookies);
+            bcrypt.hash(""+reqMDP, 10, function (err, hash) {
+                if (err) {
+                    res.send({status: 1, message: "Erreur" + err});
+                } else {
+                    //console.log(hash);
+                    // Store hash in your password DB.
+                    hashpass = hash;
 
-      //console.log(hash);
-      // Store hash in your password DB.
+                    con.query(
+                        "INSERT INTO `user`(`idPersonneUser`, `motDePasse`, `ajoutDate`) values (?,?,?)",
+                        [
+                            reqIdPersonne,
+                            hash,
+                            dateHeureActuelle()
+                        ],
+                        function (err, result) {
+                            res.header(
+                                "Access-Control-Allow-Methods",
+                                "GET,HEAD,OPTIONS,POST,PUT"
+                            );
+                            res.header(
+                                "Access-Control-Allow-Headers",
+                                "Origin, X-Requested-With, Content-Type, Accept, x-User-key, x-User-token, x-User-secret, Authorization"
+                            );
 
-      con.query(
-        "INSERT INTO `user`(`idPersonneUser`, `motDePasse`, `ajoutDate`) values (?,?,?)",
-        [
-            reqIdPersonne,
-            reqMDP,
-            dateHeureActuelle()
-        ],
-        function (err, result) {
-          res.header("Access-Control-Allow-Origin", "*");
-          res.header(
-            "Access-Control-Allow-Methods",
-            "GET,HEAD,OPTIONS,POST,PUT"
-          );
-          res.header(
-            "Access-Control-Allow-Headers",
-            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
-          );
-
-          if (err) {
-            //console.log("KKKKKKKKKKKKKKKKKK");
-            res.send({
-              status: 500,
-              message: "Erreur de conection ou login existe" + err,
+                            if (err) {
+                                //console.log("KKKKKKKKKKKKKKKKKK");
+                                res.send({
+                                    status: 1,
+                                    message: "Erreur de conection ou login existe" + err,
+                                });
+                                con.release();
+                            } else {
+                                //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                                res.send({
+                                    status: 0,
+                                    message: "Utilisateur enregistrer ",
+                                });
+                                //console.log("Post successful");
+                                con.release();
+                            }
+                        }
+                    );
+                }
             });
-            con.release();
-          } else {
-            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
-            res.send({
-              status: 200,
-              message:result
-            });
-            //console.log("Post successful");
-            con.release();
-          }
-        }
-      );
-    });
-  };
+        });
+    };
 
-  this.selectUsers = function (req, res) {
+
+
+
+
+
+    this.selectUserparEmail = function (req, res) {
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from User inner join personne on personne.idPersonne=user.idPersonneUser",
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-User-key, x-User-token, x-User-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+
+
+    this.selectUsers = function (req, res) {
     let hashpass = "";
     let bon = "";
     connection.acquire(function (err, con) {

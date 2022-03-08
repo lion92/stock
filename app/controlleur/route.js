@@ -1,8 +1,15 @@
 var todo = require("../model/stcock");
 let fileupload = require("express-fileupload");
 module.exports = {
-  //////////////////////////////Personne//////////////////////////////////////////////////
+  
+
   configure: function (app) {
+    ////////////////////login/////////////////
+    app.post('/login', function(req, res){
+      todo.reqlogin(req.body.email, req.body.password, req.body.token, req, res);
+    });
+    ////////////////////////////
+    //////////////////////////////Personne//////////////////////////////////////////////////
     app.post("/registerPersonne", function (req, res) {
       todo.reqgisterPersonne(
           req.body.nom,
@@ -17,8 +24,8 @@ module.exports = {
           res
       );
     });
-    app.get("/selectPersonne/:email", function (req, res) {
-      todo.selectPersonne(req.params.email, req, res);
+    app.get("/selectPersonneParEmail/:email", function (req, res) {
+      todo.selectPersonneParEmail(req.params.email, req, res);
     });
     app.get("/selectPersonnes", function (req, res) {
       todo.selectPersonnes(req, res);
@@ -143,8 +150,102 @@ module.exports = {
       );
     });
 
+    this.reqlogin = function (reqemail, reqpassword, reqtoken, req, res) {
+      let conection2 = false;
+      let email = "";
+      jwt.verify(
+          reqtoken,
+          "secret_this_should_be_longer",
+          function (err, decoded) {
+            //console.log("////////////");
+            if (decoded === undefined) {
+              conection2 = true;
+            } else {
+              email = decoded.email;
+              conection2 = false;
+            }
+            ////console.log(decoded.code) // bar
+          }
+      );
+      if (conection2 == true) {
+        connection.acquire(function (err, con) {
+          //console.log(err);
+          //console.log("Connecté à la base de données MySQL!");
+
+          con.query(
+              "select motDePasse from user inner join personne on user.idPersonneUser=personne.idPersonne where email=?",
+              reqemail,
+              function (err, result) {
+                con.release();
+
+                res.header("Access-Control-Allow-Origin", "*");
+                res.header(
+                    "Access-Control-Allow-Methods",
+                    "GET,HEAD,OPTIONS,POST,PUT"
+                );
+                res.header(
+                    "Access-Control-Allow-Headers",
+                    "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+                );
+                if (err) {
+                  res.send({status: 1, message: "email"});
+                } else {
+                  // res.send({ status: 0, message:  result[0].password2});
+                  //console.log("Post successful");
+                  if (!result[0]) {
+                    res.send({status: 1, message: "email invalid"});
+                  } else {
+                    bcrypt.compare(
+                        reqpassword,
+                        result[0].password2,
+                        function (err, result2) {
+                          // result == true
+                          if (err) {
+                            res.send({
+                              status: 0,
+                              message:
+                                  "Erreur pour comparer les mots de passe " + reqemail,
+                            });
+                            con.release();
+                          }
+                          if (!result2) {
+                            res.send({
+                              status: 0,
+                              message: "Mot de passe incorrect pour " + reqemail,
+                            });
+                          } else {
+                            const jwttoken = jwt.sign(
+                                {email: reqemail},
+                                "secret_this_should_be_longer",
+                                {expiresIn: "12h"}
+                            );
+                            const cookieOption = {
+                              expiresIn: new Date(Date.now() + 12*24 * 3600),
+                              httpOnly: true,
+                            };
+                            console.log(jwttoken);
+
+                            res.send({
+                              status: 0,
+                              message: "Connecte " + reqemail + result2,
+                              token: jwttoken,
+                            });
+                          }
+                        }
+                    );
+                  }
+                }
+              }
+          );
+        });
+      } else {
+        // res.clearCookie("essai");
+        res.send({status: 1, message: "Connecté " + email});
+      }
+    };
+
     app.get("/selectUser/:email", function (req, res) {
-      todo.selectUser(req.params.email, req, res);
+      todo.selectUserparEmail(req.params.email, req, res);
     });
 
     app.get("/selectUsers", function (req, res) {
