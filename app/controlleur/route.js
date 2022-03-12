@@ -27,6 +27,41 @@ module.exports = {
     app.get("/selectPersonneParEmail/:email", function (req, res) {
       todo.selectPersonneParEmail(req.params.email, req, res);
     });
+    app.get("/selectCollections", function (req, res) {
+      todo.selectCollections(req, res);
+    });
+
+    app.get("/selectCollectionParId/:id", function (req, res) {
+      todo.selectCollectionsParId(req.params.id, req, res);
+    });
+
+    app.put("/updateCollection", function (req, res) {
+      todo.updateCollection(
+          req.body.nom,
+          req.body.idProduitCollection,
+          req.body.idUSer,req.body.idCollection,
+
+          req,
+          res
+      );
+    });
+
+    app.post("/ajoutCollection", function (req, res) {
+      todo.reqgisterCollection(
+          req.body.nom,
+          req.body.idProduitCollection,
+          req.body.idUSer,
+
+          req,
+          res
+      );
+    });
+
+
+    app.delete("/deleteCollection/:idColletcion", function (req, res) {
+      todo.deleteCollection(req.params.idColletcion, req, res);
+    });
+
     app.get("/selectPersonnes", function (req, res) {
       todo.selectPersonnes(req, res);
     });

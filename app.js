@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var envoi = require('./app/model/stcock');
+
 const cors=require('cors');
 var connection = require('./app/config/connection');
 var routes = require('./app/controlleur/route');

@@ -10,7 +10,7 @@ function Connection() {
     password:"",
     connectionLimit:100,
     multipleStatements:true,
-    database:"stock"
+    database:"repertoirecarte"
      //mysql connection pool length
   //  database: "todo"
 
@@ -25,7 +25,7 @@ function Connection() {
         password:"",
         connectionLimit:100,
         multipleStatements:true,
-        database:"stock"
+        database:"repertoirecarte"
          //mysql connection pool length
       //  database: "todo"
 
