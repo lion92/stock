@@ -49,7 +49,6 @@ module.exports = {
     app.post("/ajoutCollection", function (req, res) {
       todo.reqgisterCollection(
           req.body.nom,
-          req.body.idProduitCollection,
           req.body.idUSer,
 
           req,
@@ -58,8 +57,42 @@ module.exports = {
     });
 
 
-    app.delete("/deleteCollection/:idColletcion", function (req, res) {
+    app.delete("/deleteColletcion/:idColletcion", function (req, res) {
       todo.deleteCollection(req.params.idColletcion, req, res);
+    });
+
+
+
+    app.get("/selectCollectionInserts", function (req, res) {
+      todo.selectCollectionInserts(req, res);
+    });
+
+    app.get("/selectCollectionInsertParId/:id", function (req, res) {
+      todo.selectCollectionInsertsParId(req.params.id, req, res);
+    });
+
+    app.put("/updateCollectionInsert", function (req, res) {
+      todo.updateCollectionInsert(
+          req.body.idContenu,
+          req.body.idCollection,
+          req.body.idProduit,
+          req,
+          res
+      );
+    });
+
+    app.post("/ajoutCollectionInsert", function (req, res) {
+      todo.reqgisterCollectionInsert(
+          req.body.idProduit,
+          req.body.idCollection,
+          req,
+          res
+      );
+    });
+
+
+    app.delete("/deleteCollectionInsert/:idColletcion", function (req, res) {
+      todo.deleteCollectionInsert(req.params.idColletcion, req, res);
     });
 
     app.get("/selectPersonnes", function (req, res) {
@@ -134,6 +167,42 @@ module.exports = {
 
     app.delete("/deleteCategorie/:idCategorie", function (req, res) {
       todo.deleteCategorie(req.params.idCategorie, req, res);
+    });
+    ////////////////////////////////////////////////Contenu////////////////////////////////////////
+    app.post("/ajoutContenu", function (req, res) {
+      todo.reqgisterContenu(
+          req.body.idContenuCollection,
+          req.body.produit,
+
+          req,
+          res
+      );
+    });
+
+    app.get("/selectContenu/:email", function (req, res) {
+      todo.selectContenu(req.params.email, req, res);
+    });
+
+    app.get("/selectContenus", function (req, res) {
+      todo.selectContenus(req, res);
+    });
+
+    app.get("/selectContenuParId/:id", function (req, res) {
+      todo.selectContenuParId(req.params.id, req, res);
+    });
+
+    app.put("/updateContenu", function (req, res) {
+      todo.updateContenu(
+          req.body.id,
+           req.body.produit,
+          req.body.idContenuCollection,
+          req,
+          res
+      );
+    });
+
+    app.delete("/deleteContenu/:idContenu", function (req, res) {
+      todo.deleteContenu(req.params.idContenu, req, res);
     });
     ////////////////////////////////////////////////Produit///////////////////////////////////////////
     app.post("/ajoutProduit", function (req, res) {
@@ -320,6 +389,11 @@ module.exports = {
     app.get("/selectVentes", function (req, res) {
       todo.selectVentes(req, res);
     });
+     
+    app.get("/ventesTotal/:idProduit", function (req, res) {
+      todo.venteTotalParIdProduit(req.params.idProduit,req,res);
+    });
+
 
 
     app.get("/selectVenteParId/:id", function (req, res) {

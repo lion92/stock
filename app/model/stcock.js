@@ -982,6 +982,120 @@ function stock() {
       );
     });
   };
+  /////////////////////////////////////////////////Contenu//////////////////////////////////
+  this.reqgisterContenu = function (
+    idContenuCollection,
+    produit,
+    req,
+    res
+  ) {
+   
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `contenucollection`(`idCollectionContenu`, `idProduitContenu`,`ajoutDate`) VALUES (?,?,?)",
+        [
+          idContenuCollection,
+          produit,
+            dateHeureActuelle()
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+  this.updateContenu = function (
+    reqId,
+    reqidProduit,
+    reqCollection,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `produit` SET `idCategorie`=?,`Prix`=?,`stock`=?,`nom`=?,`dateProduit`=?  WHERE idProduit=?",
+        [
+            reqIdCategorie,
+            reqPrix,
+            reqstock,
+            reqNom,
+          dateHeureActuelle(),
+          reqIdProduit,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Produit-key, x-Produit-token, x-Produit-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
   /////////////////////////////////////////////////produit///////////////////////////////////
   this.reqgisterProduit = function (
     reqIdCategorie,
@@ -1538,6 +1652,52 @@ function stock() {
     });
   };
 
+
+this.venteTotalParIdProduit = function (id,req, res) {
+  let hashpass = "";
+  let bon = "";
+  connection.acquire(function (err, con) {
+    //console.log(err);
+    //console.log("Connecté à la base de données MySQL!");
+
+    //console.log(req.cookies);
+
+    //console.log(hash);
+    // Store hash in your password DB.
+
+    con.query(
+      "SELECT sum(`quantite`) FROM `vente` WHERE idProduit=?",id,
+      function (err, result) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header(
+          "Access-Control-Allow-Methods",
+          "GET,HEAD,OPTIONS,POST,PUT"
+        );
+        res.header(
+          "Access-Control-Allow-Headers",
+          "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+        );
+
+        if (err) {
+          //console.log("KKKKKKKKKKKKKKKKKK");
+          res.send({
+            status: 1,
+            message: "Erreur de conection ou login existe" + err,
+          });
+          con.release();
+        } else {
+          //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+          res.send({
+            status: 200,
+            message: result,
+          });
+          //console.log("Post successful");
+          con.release();
+        }
+      }
+    );
+  });
+};
   this.selectVentes = function (req, res) {
     let hashpass = "";
     let bon = "";
@@ -1695,6 +1855,210 @@ function stock() {
     });
   };
 
+  this.reqgisterCollectionInsert = function (
+    reqIdProduit,
+    reqIdCollection,
+    req,
+    res
+  ) {
+   console.log(reqIdProduit, reqIdCollection);
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "INSERT INTO `contenucollection`(`idCollectionContenu`, `idProduitContenu`, `ajoutDate`) VALUES (?,?,?)",
+        [
+            reqIdCollection,
+            reqIdProduit,
+            dateHeureActuelle()
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message:result
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+
+this.selectCollectionInsertsParId = function (id,req, res) {
+  let hashpass = "";
+  let bon = "";
+  connection.acquire(function (err, con) {
+    //console.log(err);
+    //console.log("Connecté à la base de données MySQL!");
+
+    //console.log(req.cookies);
+
+    //console.log(hash);
+    // Store hash in your password DB.
+
+    con.query(
+      "SELECT `idContenu`, `idCollectionContenu`, `idProduitContenu`, `ajoutDate` FROM `contenucollection` WHERE idCollectionContenu=?",id,
+      function (err, result) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header(
+          "Access-Control-Allow-Methods",
+          "GET,HEAD,OPTIONS,POST,PUT"
+        );
+        res.header(
+          "Access-Control-Allow-Headers",
+          "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+        );
+
+        if (err) {
+          //console.log("KKKKKKKKKKKKKKKKKK");
+          res.send({
+            status: 1,
+            message: "Erreur de conection ou login existe" + err,
+          });
+          con.release();
+        } else {
+          //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+          res.send({
+            status: 200,
+            message: result,
+          });
+          //console.log("Post successful");
+          con.release();
+        }
+      }
+    );
+  });
+};
+  this.selectCollectionInserts = function (req, res) {
+    let hashpass = "";
+    let bon = "";
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "SELECT * FROM contenucollection",
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 1,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
+    
+    this.updateCollectionInsert = function (
+    reqIdContenu,
+    reqIdCollection,
+    reqidProduit,
+    req,
+    res
+  ) {
+    connection.acquire(function (err, con) {
+      //console.log(err);
+      //console.log("Connecté à la base de données MySQL!");
+
+      //console.log(req.cookies);
+
+      //console.log(hash);
+      // Store hash in your password DB.
+
+      con.query(
+        "UPDATE `contenucollection` SET `idCollectionContenu`=?,`idProduitContenu`=?,`ajoutDate`=? WHERE idContenu`=?",
+        [
+            reqIdCollection,
+            reqidProduit,
+            dateHeureActuelle(),
+            reqIdContenu,
+        ],
+        function (err, result) {
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header(
+            "Access-Control-Allow-Methods",
+            "GET,HEAD,OPTIONS,POST,PUT"
+          );
+          res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+          );
+
+          if (err) {
+            //console.log("KKKKKKKKKKKKKKKKKK");
+            res.send({
+              status: 500,
+              message: "Erreur de conection ou login existe" + err,
+            });
+            con.release();
+          } else {
+            //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+            res.send({
+              status: 200,
+              message: result,
+            });
+            //console.log("Post successful");
+            con.release();
+          }
+        }
+      );
+    });
+  };
+
     this.uploadPicture = function (req, res) {
         console.log("test");
         try {
@@ -1765,6 +2129,94 @@ function stock() {
 
 
       };
+  
+      
+    this.deleteCollectionInsert = function (reqIdContenu, req, res) {
+      connection.acquire(function (err, con) {
+        con.query(
+          "DELETE FROM `contenucollection` WHERE idContenu=?",
+          reqIdContenu,
+          function (err, result) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header(
+              "Access-Control-Allow-Methods",
+              "GET,HEAD,OPTIONS,POST,PUT"
+            );
+            res.header(
+              "Access-Control-Allow-Headers",
+              "Origin, X-Requested-With, Content-Type, Accept, x-Vente-key, x-Vente-token, x-Vente-secret, Authorization"
+            );
+  
+            if (err) {
+              res.send({
+                status: 500,
+                message: "Erreur de conection ou login existe" + err,
+              });
+              con.release();
+            } else {
+              res.send({
+                status: 200,
+                message: result,
+              });
+              con.release();
+            }
+          }
+        );
+      });
+  
+  
+  
+  
+  
+        };
+
+    this.selectCollectionsParId = function (reqid,req, res) {
+        console.log("test");
+        let hashpass = "";
+        let bon = "";
+        connection.acquire(function (err, con) {
+            //console.log(err);
+            //console.log("Connecté à la base de données MySQL!");
+
+            //console.log(req.cookies);
+
+            //console.log(hash);
+            // Store hash in your password DB.
+
+            con.query(
+                "select * from Collection inner join user on user.idUser=collection.iduser where id=?",reqid,
+                function (err, result) {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    res.header(
+                        "Access-Control-Allow-Methods",
+                        "GET,HEAD,OPTIONS,POST,PUT"
+                    );
+                    res.header(
+                        "Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept, x-Collection-key, x-Collection-token, x-Collection-secret, Authorization"
+                    );
+
+                    if (err) {
+                        //console.log("KKKKKKKKKKKKKKKKKK");
+                        res.send({
+                            status: 1,
+                            message: "Erreur de conection ou login existe" + err,
+                        });
+                        con.release();
+                    } else {
+                        //console.log("IIIIIIIIIIIIIIIIIIIIIII");
+                        res.send({
+                            status: 200,
+                            message: result,
+                        });
+                        //console.log("Post successful");
+                        con.release();
+                    }
+                }
+            );
+        });
+    };
+    
     this.selectCollectionparEmail = function (req, res) {
         let hashpass = "";
         let bon = "";
@@ -1825,7 +2277,7 @@ function stock() {
                 // Store hash in your password DB.
 
                 con.query(
-                    "select * from Collection inner join produit on produit.idProduit=Collection.idProduit inner join user on user.idUser=collection.iduser",
+                    "select * from Collection inner join user on user.idUser=collection.iduser",
                     function (err, result) {
                         res.header("Access-Control-Allow-Origin", "*");
                         res.header(
@@ -1875,9 +2327,9 @@ function stock() {
                 // Store hash in your password DB.
 
                 con.query(
-                    "UPDATE `Collection` SET `idproduit`=?,`nom`=?,`iduser`=?,`ajoutDate`=? WHERE id=?",
+                    "UPDATE `Collection` SET `nom`=?,`iduser`=?,`ajoutDate`=? WHERE id=?",
                     [
-                        reqProduit,
+                        
                         reqNom, reqIdUser,
                         dateHeureActuelle(),
                         reqidCollection
@@ -1916,12 +2368,11 @@ function stock() {
 
         this.reqgisterCollection = function (
           reqnom,
-          reqIdProduit,
           reqIdUser,
           req,
           res
         ) {
-          console.log(reqnom, reqIdUser, reqIdProduit);
+          console.log(reqnom, reqIdUser);
          
           connection.acquire(function (err, con) {
             //console.log(err);
@@ -1933,7 +2384,7 @@ function stock() {
             // Store hash in your password DB.
       
             con.query(
-              "INSERT INTO `collection`( `nom`, `idProduit`, `idUser`, `dateAjout`) VALUES (?,?,?,?)",[reqnom, reqIdProduit, reqIdUser, dateHeureActuelle()],
+              "INSERT INTO `collection`( `nom`,`idUser`, `dateAjout`) VALUES (?,?,?)",[reqnom, reqIdUser, dateHeureActuelle()],
       
               function (err, result) {
                 res.header("Access-Control-Allow-Origin", "*");
@@ -1969,7 +2420,7 @@ function stock() {
         this.deleteCollection = function (reqIdCollection, req, res) {
             connection.acquire(function (err, con) {
                 con.query(
-                    "DELETE FROM `Collection` WHERE idCollection=?",
+                    "DELETE FROM `Collection` WHERE id=?",
                     reqIdCollection,
                     function (err, result) {
                         res.header("Access-Control-Allow-Origin", "*");
