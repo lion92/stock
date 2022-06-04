@@ -134,7 +134,7 @@ io.on('connection', function(socket){
     })
 })
 //pass a http.Server instance
-http.listen(8000);
+http.listen();
 /*var server = app.listen(8000, function(){
 
 
