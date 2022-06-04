@@ -3,29 +3,31 @@ var mysql = require('mysql');
 function Connection() {
 
   this.pool = mysql.createPool({
+      
+      host:"https://stock.krissdeveloppeur.com",
+      port:"3306",
+      user:"kriss92_stock",
+      password:"stockokokok",
+      connectionLimit:500,
+      multipleStatements:true,
+      database:"kriss92_stock"
+      //mysql connection pool length
+      //  database: "todo"
 
-    host:"localhost",
-    port:"3306",
-    user:"root",
-    password:"",
-    connectionLimit:100,
-    multipleStatements:true,
-    database:"repertoirecarte"
-     //mysql connection pool length
-  //  database: "todo"
+  });
 
 });
 
   this.init = function() {
     this.pool = mysql.createPool({
 
-        host:"localhost",
+        host:"https://stock.krissdeveloppeur.com",
         port:"3306",
-        user:"root",
-        password:"",
-        connectionLimit:100,
+        user:"kriss92_stock",
+        password:"stockokokok",
+        connectionLimit:500,
         multipleStatements:true,
-        database:"repertoirecarte"
+        database:"kriss92_stock"
          //mysql connection pool length
       //  database: "todo"
 
